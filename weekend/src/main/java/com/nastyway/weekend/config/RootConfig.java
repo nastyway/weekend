@@ -13,6 +13,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
+import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
 
 @Configuration
 public class RootConfig {
@@ -56,7 +57,8 @@ public class RootConfig {
     {
         SqlSessionFactoryBean sqlSessionFactoryBean = new SqlSessionFactoryBean();
         sqlSessionFactoryBean.setDataSource(this.dataSource());
-        sqlSessionFactoryBean.setConfigLocation(new ClassPathResource(MYBATIS_CONFIG_FILE_PATH));
+        sqlSessionFactoryBean.setMapperLocations(new PathMatchingResourcePatternResolver().getResources("classpath:/com/nastyway/weekend/**/mysql/*_SqlMap.xml"));
+        sqlSessionFactoryBean.setConfigLocation( new ClassPathResource(MYBATIS_CONFIG_FILE_PATH) );
         return sqlSessionFactoryBean.getObject();
     }
     

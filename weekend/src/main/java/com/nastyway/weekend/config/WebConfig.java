@@ -20,7 +20,7 @@ import org.springframework.web.servlet.view.InternalResourceViewResolver;
 @EnableWebMvc
 @EnableAsync // @Async 어노테이션을 사용하기 위함
 @ComponentScan(
-    basePackages="com.nethru.test",
+    basePackages="com.nastyway.weekend",
     excludeFilters=@ComponentScan.Filter(Configuration.class)
 )
 public class WebConfig extends WebMvcConfigurerAdapter // 인터셉터를 추가하기 위해 WebMvcConfigurerAdapter 를 상속한다

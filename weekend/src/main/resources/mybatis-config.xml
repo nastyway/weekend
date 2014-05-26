@@ -4,4 +4,13 @@
     "http://mybatis.org/dtd/mybatis-3-config.dtd">
 <configuration>
 
+	<settings>
+		<setting name="cacheEnabled" value="false" />
+		<setting name="defaultExecutorType" value="REUSE" />
+	</settings>
+
+	<typeAliases>
+		<typeAlias alias="LoginObject" type="com.nastyway.weekend.login.model.Login" />
+	</typeAliases>
+
 </configuration>
