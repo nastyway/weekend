@@ -23,6 +23,7 @@ public class Initializer implements WebApplicationInitializer
         
         this.addDispatcherServlet(servletContext);
         this.addUtf8CharacterEncodingFilter(servletContext);
+        
     }
     
     /**

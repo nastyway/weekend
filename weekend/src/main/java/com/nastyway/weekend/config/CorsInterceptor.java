@@ -2,40 +2,57 @@ package com.nastyway.weekend.config;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.util.StringUtils;
 import org.springframework.web.servlet.HandlerInterceptor;
 import org.springframework.web.servlet.ModelAndView;
+
+import com.nastyway.weekend.login.model.Login;
 
 public class CorsInterceptor implements HandlerInterceptor
 {
     private static final Logger logger = LoggerFactory.getLogger(CorsInterceptor.class);
     
-    private static final String  ACCESS_CONTROL_ALLOW_ORIGIN      = "Access-Control-Allow-Origin";
-    private static final String  ACCESS_CONTROL_ALLOW_CREDENTIALS = "Access-Control-Allow-Credentials";
-    private static final String  REQUEST_HEADER_ORIGIN            = "Origin";
-
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception
     {
-        logger.debug("preHandle() start");
+        System.out.println("preHandle() start");
         
-        String origin = request.getHeader(REQUEST_HEADER_ORIGIN);
-        logger.debug("Origin Header: {}", origin);
-
-        // CORS 가능하도록 응답 헤더 추가
-        if (StringUtils.hasLength(origin))
-        {
-            // 요청한 도메인에 대해 CORS 를 허용한다. 제한이 필요하다면 필요한 값으로 설정한다.
-            response.setHeader(ACCESS_CONTROL_ALLOW_ORIGIN, origin);
-            
-            // credentials 허용
-            response.setHeader(ACCESS_CONTROL_ALLOW_CREDENTIALS, "true");
+        String rootPath = request.getContextPath()+"/login/loginForm.do";
+        
+        //로그인 쪽은 세션체크에서 배제하자.
+        String[] requestURI = request.getRequestURI().split("/");
+        String loginPath = request.getContextPath()+"/login";
+        
+        if(requestURI.length>2) {
+	        if(loginPath.equals("/"+requestURI[1]+"/"+requestURI[2])){
+	        	return true;
+	        }
         }
         
-        logger.debug("preHandle() end");
+		HttpSession session = request.getSession(false);
+
+		if (session == null) {
+			
+			response.sendRedirect(rootPath);
+			// index.jsp 로 이동, web.xml 에 설정 되어 있음 (<welcome-file-list> 태그)
+			return false;
+		} else {
+			
+			Login login = (Login) session.getAttribute("userInfo");
+			// UserInfo 로 세션 등록
+			if (login != null && login.getUserId() != null) {
+				// session exist
+			} else {
+				// session non exist
+				response.sendRedirect(rootPath);
+				return false;
+			}
+		}
+
+		System.out.println("preHandle() end");
         return true;
     }
 

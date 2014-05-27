@@ -4,11 +4,16 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.scheduling.annotation.EnableAsync;
+import org.springframework.web.multipart.commons.CommonsMultipartResolver;
 import org.springframework.web.servlet.ViewResolver;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
 import org.springframework.web.servlet.view.InternalResourceViewResolver;
+import org.springframework.web.servlet.view.UrlBasedViewResolver;
+import org.springframework.web.servlet.view.tiles3.TilesConfigurer;
+import org.springframework.web.servlet.view.tiles3.TilesView;
+import org.springframework.web.servlet.view.tiles3.TilesViewResolver;
 
 /**
  * MVC 설정용 클래스.
@@ -25,6 +30,10 @@ import org.springframework.web.servlet.view.InternalResourceViewResolver;
 )
 public class WebConfig extends WebMvcConfigurerAdapter // 인터셉터를 추가하기 위해 WebMvcConfigurerAdapter 를 상속한다
 {
+	
+	/**
+     * 뷰 리졸버 설정
+     */
     @Bean
     public ViewResolver viewResolver()
     {
@@ -42,4 +51,39 @@ public class WebConfig extends WebMvcConfigurerAdapter // 인터셉터를 추가하기 위
     {
         registry.addInterceptor(new CorsInterceptor());
     }
+    
+    /**
+     * 타일즈 설정
+     */
+    @Bean
+    public TilesConfigurer tilesConfigurer(){
+    	TilesConfigurer tc = new TilesConfigurer();
+    	tc.setDefinitions(new String[] { "/WEB-INF/template/tiles.xml" });
+    	tc.setCheckRefresh(true);
+    	
+    	return tc;
+    }
+    
+    /**
+     * 타일즈 뷰 리졸버 설정
+     */
+    @Bean
+    public TilesViewResolver tilesViewResolver()
+    {
+        TilesViewResolver resolver = new TilesViewResolver();
+        resolver.setViewClass(TilesView.class);
+        resolver.setOrder(1);
+        return resolver;
+    }
+    /*
+    *//**
+     * 파일업로드 리졸버 설정
+     *//*
+    @Bean
+    public CommonsMultipartResolver multipartResolver() {
+    	CommonsMultipartResolver multipartresolver = new CommonsMultipartResolver();
+    	multipartresolver.setMaxUploadSize(52428800); // 50MB 제한
+    	multipartresolver.setDefaultEncoding("UTF-8");
+    	return multipartresolver;
+    }*/
 }
