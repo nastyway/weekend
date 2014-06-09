@@ -1,0 +1,175 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.weekend.mobile.board.BoardItem">
+
+	<select id="listBoardItem" parameterType="String" resultType="BoardItemObject">
+		<![CDATA[
+		SELECT  ITEM_ID, 
+				BOARD_ID, 
+				TITLE,
+				HIT_COUNT,
+				CONTENTS,
+				START_DATE, 
+				END_DATE, 
+				REGISTER_ID,
+				REGISTER_NAME,
+				DATE(REGISTER_DATE) AS REGISTER_DATE,
+				DATE
+		FROM (
+				SELECT 
+					ITEM_ID, 
+					BOARD_ID, 
+					TITLE,
+					HIT_COUNT,
+					CONTENTS,
+					START_DATE, 
+					END_DATE, 
+					REGISTER_ID,
+					REGISTER_NAME,
+					TIMESTAMP(REGISTER_DATE) AS REGISTER_DATE,
+					DATE
+				FROM  WEEKEND_BD_BOARD_ITEM
+				WHERE BOARD_ID = #{boardId}
+				ORDER BY REGISTER_DATE DESC
+			) T1
+		]]>
+	</select>
+	
+	<select id="getBoardItem" parameterType="Map" resultType="BoardItemObject">
+		SELECT  ITEM_ID, 
+				BOARD_ID, 
+				TITLE,
+				HIT_COUNT,
+				CONTENTS,
+				START_DATE, 
+				END_DATE, 
+				REGISTER_ID,
+				REGISTER_NAME,
+				DATE(REGISTER_DATE) AS REGISTER_DATE,
+				GENRE,
+				PLACE,
+				MC,
+				JUDGE,
+				GUEST,
+				TUTOR,
+				TEL,
+				EMAIL,
+				KAKAOTALK,
+				FACEBOOK,
+				TWITTER,
+				INSTAGRAM,
+				DJ,
+				COORDINATE,
+				DATE,
+				ADDRESS1,
+				ADDRESS2
+		FROM WEEKEND_BD_BOARD_ITEM
+		WHERE BOARD_ID = #{boardId}
+		AND   ITEM_ID = #{itemId}
+	</select>
+	
+	<insert id="createBoardItem" parameterType="BoardItemObject">
+		INSERT INTO WEEKEND_BD_BOARD_ITEM
+		(ITEM_ID, BOARD_ID, TITLE, CONTENTS, HIT_COUNT, START_DATE, END_DATE, REGISTER_ID, REGISTER_NAME, REGISTER_DATE,
+		GENRE, PLACE, MC, JUDGE, GUEST, TUTOR, TEL, EMAIL, KAKAOTALK, FACEBOOK, TWITTER, INSTAGRAM, DATE, DATE_TIME, DJ, COORDINATE,
+		ADDRESS1, ADDRESS2) 
+		VALUES (#{item_id}, #{board_id}, #{title}, #{contents}, 1, #{start_date}, #{end_date}, #{register_id}, #{register_name}, NOW(),
+		#{genre},#{place},#{mc},#{judge},#{guest},#{tutor},#{tel},#{email},#{kakaotalk},#{facebook},#{twitter},#{instagram},#{date},#{date_time},#{dj},#{coordinate},
+		#{address1},#{address2});
+	</insert>
+	
+	<select id="getMappedFileInfo" parameterType="String" resultType="FileMappingObject">
+		SELECT	 *
+		FROM	WEEKEND_FD_FILE_MAPPING
+		WHERE	ITEM_ID = #{boardId}
+	</select>
+	
+	<delete id="deleteBoardItem" parameterType="BoardItemObject">
+		DELETE 
+		FROM	WEEKEND_BD_BOARD_ITEM
+		WHERE	ITEM_ID = #{item_id}
+		AND		BOARD_ID = #{board_id}
+	</delete>
+	
+	<select id="listBoardSearchItem" parameterType="BoardItemObject" resultType="BoardItemObject">
+		<![CDATA[
+		SELECT  ITEM_ID, 
+				BOARD_ID, 
+				TITLE,
+				HIT_COUNT,
+				CONTENTS,
+				START_DATE, 
+				END_DATE, 
+				REGISTER_ID,
+				REGISTER_NAME,
+				DATE(REGISTER_DATE) AS REGISTER_DATE,
+				DATE
+		FROM (
+				SELECT 
+					ITEM_ID, 
+					BOARD_ID, 
+					TITLE,
+					HIT_COUNT,
+					CONTENTS,
+					START_DATE, 
+					END_DATE, 
+					REGISTER_ID,
+					REGISTER_NAME,
+					TIMESTAMP(REGISTER_DATE) AS REGISTER_DATE,
+					DATE
+				FROM  WEEKEND_BD_BOARD_ITEM
+				WHERE 1=1
+				]]> 
+				<if test="board_id1 == null or board_id1 == ''">
+					AND   BOARD_ID = #{board_id}
+				</if>
+				<if test="board_id1 != null and board_id1 != ''">
+					AND   (BOARD_ID = #{board_id} or BOARD_ID = #{board_id1})
+				</if>
+				<if test="search_word != null and search_word != ''">
+					AND	  (TITLE LIKE  '%${search_word}%' or CONTENTS LIKE '%${search_word}%')
+				</if>
+				<![CDATA[
+				ORDER BY REGISTER_DATE DESC
+			) T1
+			LIMIT #{start_index},#{end_index}
+		]]>
+	</select>
+	
+	<select id="countListBoardSearchItem" parameterType="BoardItemObject" resultType="int">
+		<![CDATA[
+		SELECT  COUNT(*)
+		FROM (
+				SELECT 
+					ITEM_ID, 
+					BOARD_ID, 
+					TITLE,
+					HIT_COUNT,
+					CONTENTS,
+					START_DATE, 
+					END_DATE, 
+					REGISTER_ID,
+					REGISTER_NAME,
+					TIMESTAMP(REGISTER_DATE) AS REGISTER_DATE,
+					DATE
+				FROM  WEEKEND_BD_BOARD_ITEM
+				WHERE 1=1
+				]]> 
+				<if test="board_id1 == null or board_id1 == ''">
+					AND   BOARD_ID = #{board_id}
+				</if>
+				<if test="board_id1 != null and board_id1 != ''">
+					AND   (BOARD_ID = #{board_id} or BOARD_ID = #{board_id1})
+				</if>
+				<if test="search_word != null and search_word != ''">
+					AND	  (TITLE LIKE  '%${search_word}%' or CONTENTS LIKE '%${search_word}%')
+				</if>
+				<![CDATA[
+				ORDER BY REGISTER_DATE DESC
+			) T1
+		]]>
+	</select>
+</mapper>
