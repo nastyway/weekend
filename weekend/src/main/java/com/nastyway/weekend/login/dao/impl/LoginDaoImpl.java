@@ -7,7 +7,7 @@ import org.springframework.stereotype.Repository;
 
 import com.nastyway.weekend.login.dao.LoginDao;
 
-@Repository
+@Repository("LoginDao")
 public class LoginDaoImpl extends SqlSessionDaoSupport implements LoginDao {
 	
 	private static String NAMESPACE = "com.nastyway.weekend.login.";

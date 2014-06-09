@@ -10,7 +10,13 @@
 	</settings>
 
 	<typeAliases>
+		<!-- Login -->
 		<typeAlias alias="LoginObject" type="com.nastyway.weekend.login.model.Login" />
+		<!-- Board -->
+		<typeAlias alias="BoardObject" type="com.nastyway.weekend.board.model.Board" />
+		<typeAlias alias="BoardItemObject" type="com.nastyway.weekend.board.model.BoardItem" />
+		<typeAlias alias="FileMappingObject" type="com.nastyway.weekend.fileupload.model.FileMapping" />
+		
 	</typeAliases>
 
 </configuration>

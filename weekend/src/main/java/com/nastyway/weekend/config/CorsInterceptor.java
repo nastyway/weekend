@@ -18,8 +18,7 @@ public class CorsInterceptor implements HandlerInterceptor
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception
     {
-        System.out.println("preHandle() start");
-        
+    	logger.debug("Client IP : "+request.getRemoteHost()+", requested URL : "+request.getRequestURL());
         String rootPath = request.getContextPath()+"/login/loginForm.do";
         
         //로그인 쪽은 세션체크에서 배제하자.
@@ -37,7 +36,6 @@ public class CorsInterceptor implements HandlerInterceptor
 		if (session == null) {
 			
 			response.sendRedirect(rootPath);
-			// index.jsp 로 이동, web.xml 에 설정 되어 있음 (<welcome-file-list> 태그)
 			return false;
 		} else {
 			
@@ -52,7 +50,6 @@ public class CorsInterceptor implements HandlerInterceptor
 			}
 		}
 
-		System.out.println("preHandle() end");
         return true;
     }
 

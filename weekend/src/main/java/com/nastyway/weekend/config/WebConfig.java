@@ -8,19 +8,13 @@ import org.springframework.web.multipart.commons.CommonsMultipartResolver;
 import org.springframework.web.servlet.ViewResolver;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
+import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
 import org.springframework.web.servlet.view.InternalResourceViewResolver;
-import org.springframework.web.servlet.view.UrlBasedViewResolver;
 import org.springframework.web.servlet.view.tiles3.TilesConfigurer;
 import org.springframework.web.servlet.view.tiles3.TilesView;
 import org.springframework.web.servlet.view.tiles3.TilesViewResolver;
 
-/**
- * MVC 설정용 클래스.
- * 이 클래스는 스프링의 sevlet-context.xml 의 역할을 대신한다.
- * @author mj
- *
- */
 @Configuration
 @EnableWebMvc
 @EnableAsync // @Async 어노테이션을 사용하기 위함
@@ -30,6 +24,12 @@ import org.springframework.web.servlet.view.tiles3.TilesViewResolver;
 )
 public class WebConfig extends WebMvcConfigurerAdapter // 인터셉터를 추가하기 위해 WebMvcConfigurerAdapter 를 상속한다
 {
+	
+	@Override
+	public void addResourceHandlers(ResourceHandlerRegistry registry) 
+	{
+		registry.addResourceHandler("/base/**").addResourceLocations("/base/");
+	}
 	
 	/**
      * 뷰 리졸버 설정

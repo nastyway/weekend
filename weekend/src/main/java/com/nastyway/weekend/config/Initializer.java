@@ -5,11 +5,16 @@ import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.ServletRegistration;
 
+import org.slf4j.LoggerFactory;
+import org.springframework.core.io.ClassPathResource;
 import org.springframework.web.WebApplicationInitializer;
 import org.springframework.web.context.ContextLoaderListener;
 import org.springframework.web.context.support.AnnotationConfigWebApplicationContext;
 import org.springframework.web.filter.CharacterEncodingFilter;
 import org.springframework.web.servlet.DispatcherServlet;
+
+import ch.qos.logback.classic.LoggerContext;
+import ch.qos.logback.classic.joran.JoranConfigurator;
 
 public class Initializer implements WebApplicationInitializer
 {
@@ -23,6 +28,19 @@ public class Initializer implements WebApplicationInitializer
         
         this.addDispatcherServlet(servletContext);
         this.addUtf8CharacterEncodingFilter(servletContext);
+        
+        LoggerContext context = (LoggerContext) LoggerFactory.getILoggerFactory();
+        
+        try {
+          JoranConfigurator configurator = new JoranConfigurator();
+          configurator.setContext(context);
+          // Call context.reset() to clear any previous configuration, e.g. default 
+          // configuration. For multi-step configuration, omit calling context.reset().
+          context.reset(); 
+          configurator.doConfigure(new ClassPathResource("logback.xml").getInputStream());
+        } catch (Exception e){
+        	e.printStackTrace();
+        }
         
     }
     

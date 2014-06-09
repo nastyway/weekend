@@ -55,11 +55,9 @@ public class LoginController {
 	 * @return
 	 */
 	@RequestMapping(value = "/loginProcess.do", method = RequestMethod.POST)
-	public ModelAndView loginProcess(@ModelAttribute("login") Login login, BindingResult result, HttpServletRequest request) {
+	public String loginProcess(@ModelAttribute("login") Login login, BindingResult result, HttpServletRequest request) {
 
 		logger.info("---------------------------loginProcess.do---------------------------");
-
-		ModelAndView mav = new ModelAndView();
 
 		Map<String, String> loginParam = new HashMap<String, String>();
 		loginParam.put("userId", login.getUserId());
@@ -70,12 +68,10 @@ public class LoginController {
 			HttpSession session = request.getSession();
 			session.setAttribute("userInfo", loginParam);
 
-			mav.setViewName("redirect:/main/main.do");
+			return "redirect:/main/main";
 		} else {
-			mav.setViewName("/login/loginForm");
+			return "/login/loginForm";
 		}
-
-		return mav;
 	}
 
 	/**
