@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.nastyway.weekend.user.User">
+
+	<resultMap type="UserObject" id="UserResult">
+		<result property="userId" column="user_id"/>
+		<result property="password" column="password"/>
+		<result property="userName" column="user_name"/>
+		<result property="email" column="email"/>
+	</resultMap>
+
+	<select id="getUserInfo" parameterType="String" resultMap="UserResult">
+		select  * 
+		from 	weekend_us_user
+		where	user_id = #{userId}
+	</select>
+	
+</mapper>
