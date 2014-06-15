@@ -2,84 +2,84 @@ package com.nastyway.weekend.fileupload.model;
 
 public class FileUpload {
 	
-	private String file_id;
-	private String file_path;
-	private String file_stored_name;
-	private String file_original_name;
-	private String file_content_type;
-	private String file_size;
-	private String register_id;
-	private String register_name;
-	private String register_date;
+	private String fileId;
+	private String filePath;
+	private String fileStoredName;
+	private String fileOriginalName;
+	private String fileContentType;
+	private String fileSize;
+	private String registerId;
+	private String registerName;
+	private String registerDate;
 	
-	private String item_id;
-	private String sort_order;
+	private String itemId;
+	private String sortOrder;
 	
-	public String getFile_id() {
-		return file_id;
+	public String getFileId() {
+		return fileId;
 	}
-	public void setFile_id(String file_id) {
-		this.file_id = file_id;
+	public void setFileId(String fileId) {
+		this.fileId = fileId;
 	}
-	public String getFile_path() {
-		return file_path;
+	public String getFilePath() {
+		return filePath;
 	}
-	public void setFile_path(String file_path) {
-		this.file_path = file_path;
+	public void setFilePath(String filePath) {
+		this.filePath = filePath;
 	}
-	public String getFile_original_name() {
-		return file_original_name;
+	public String getFileStoredName() {
+		return fileStoredName;
 	}
-	public void setFile_original_name(String file_original_name) {
-		this.file_original_name = file_original_name;
+	public void setFileStoredName(String fileStoredName) {
+		this.fileStoredName = fileStoredName;
 	}
-	public String getRegister_id() {
-		return register_id;
+	public String getFileOriginalName() {
+		return fileOriginalName;
 	}
-	public void setRegister_id(String register_id) {
-		this.register_id = register_id;
+	public void setFileOriginalName(String fileOriginalName) {
+		this.fileOriginalName = fileOriginalName;
 	}
-	public String getRegister_name() {
-		return register_name;
+	public String getFileContentType() {
+		return fileContentType;
 	}
-	public void setRegister_name(String register_name) {
-		this.register_name = register_name;
+	public void setFileContentType(String fileContentType) {
+		this.fileContentType = fileContentType;
 	}
-	public String getRegister_date() {
-		return register_date;
+	public String getFileSize() {
+		return fileSize;
 	}
-	public void setRegister_date(String register_date) {
-		this.register_date = register_date;
+	public void setFileSize(String fileSize) {
+		this.fileSize = fileSize;
 	}
-	public String getFile_stored_name() {
-		return file_stored_name;
+	public String getRegisterId() {
+		return registerId;
 	}
-	public void setFile_stored_name(String file_stored_name) {
-		this.file_stored_name = file_stored_name;
+	public void setRegisterId(String registerId) {
+		this.registerId = registerId;
 	}
-	public String getFile_content_type() {
-		return file_content_type;
+	public String getRegisterName() {
+		return registerName;
 	}
-	public void setFile_content_type(String file_content_type) {
-		this.file_content_type = file_content_type;
+	public void setRegisterName(String registerName) {
+		this.registerName = registerName;
 	}
-	public String getFile_size() {
-		return file_size;
+	public String getRegisterDate() {
+		return registerDate;
 	}
-	public void setFile_size(String file_size) {
-		this.file_size = file_size;
+	public void setRegisterDate(String registerDate) {
+		this.registerDate = registerDate;
 	}
-	public String getItem_id() {
-		return item_id;
+	public String getItemId() {
+		return itemId;
 	}
-	public void setItem_id(String item_id) {
-		this.item_id = item_id;
+	public void setItemId(String itemId) {
+		this.itemId = itemId;
 	}
-	public String getSort_order() {
-		return sort_order;
+	public String getSortOrder() {
+		return sortOrder;
 	}
-	public void setSort_order(String sort_order) {
-		this.sort_order = sort_order;
+	public void setSortOrder(String sortOrder) {
+		this.sortOrder = sortOrder;
 	}
 
 }

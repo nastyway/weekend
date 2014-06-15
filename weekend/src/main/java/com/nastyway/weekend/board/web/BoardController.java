@@ -15,6 +15,7 @@ import org.springframework.web.servlet.view.RedirectView;
 
 import com.nastyway.weekend.board.model.Board;
 import com.nastyway.weekend.board.model.BoardItem;
+import com.nastyway.weekend.board.model.SearchBoardCondition;
 import com.nastyway.weekend.board.service.BoardItemService;
 import com.nastyway.weekend.board.service.BoardService;
 import com.nastyway.weekend.fileupload.model.FileMapping;
@@ -35,16 +36,16 @@ public class BoardController {
 	private static final Logger logger = LoggerFactory.getLogger(BoardController.class);
 	
 	/**
-	 * 게시글 목록 조회 
+	 * 게시글 목록 조회
 	 * 
 	 * @return ModelAndView
 	 */
-	@RequestMapping(value = "/listBoardItemView.do")
-	public ModelAndView listBoardItemView(@RequestParam("boardId") String boardId) {
+	@RequestMapping(value = "/retrieveBoardItemList.do")
+	public ModelAndView listBoardItemView(@RequestParam("boardId") String boardId, 
+			@RequestParam("pageIndex") int pageIndex, 
+			@RequestParam(value="searchWord", required = false) String searchWord) throws Exception {
 		
-		logger.info("---------------------------listBoardItemView.do---------------------------");
-		
-		ModelAndView mav = new ModelAndView("board/listBoardItemView");
+		ModelAndView mav = new ModelAndView("board/retrieveBoardItemList");
 		
 		Board board = boardService.getBoard(boardId);
 		
@@ -52,11 +53,17 @@ public class BoardController {
 		if(board==null) {
 			mav.setView(new RedirectView("/weekend/base/common/error.jsp"));
 		} else {
-			List<BoardItem> result = boardItemService.listBoardItem(boardId);
+			SearchBoardCondition searchBoardCondition = new SearchBoardCondition();
+			searchBoardCondition.setBoardId(boardId);
+			searchBoardCondition.setSearchWord(searchWord);
+			searchBoardCondition.setPageSize(10);
+			searchBoardCondition.setPageIndex(pageIndex);
 			
+			List<BoardItem> result = boardItemService.listBoardItem(searchBoardCondition);
+			
+			mav.addObject("searchCondition", searchBoardCondition);
 			mav.addObject("boardId", boardId);
 			mav.addObject("result", result);
-			mav.addObject("board",board);
 		}
 		
 		return mav;
@@ -69,9 +76,7 @@ public class BoardController {
 	 * @return ModelAndView
 	 */
 	@RequestMapping(value = "/retrieveBoardItemDetail.do")
-	public ModelAndView retrieveBoardItemDetail(@RequestParam("boardId") String boardId, @RequestParam("itemId") String itemId) {
-		
-		logger.info("---------------------------retrieveBoardItemDetail.do---------------------------");
+	public ModelAndView retrieveBoardItemDetail(@RequestParam("boardId") String boardId, @RequestParam("itemId") String itemId) throws Exception {
 		
 		ModelAndView mav = new ModelAndView();
 		
@@ -113,10 +118,8 @@ public class BoardController {
 	 * 
 	 * @return ModelAndView
 	 */
-	@RequestMapping(value = "/createBoardItemView.do")
-	public ModelAndView createBoardItemView(@RequestParam("boardId") String boardId) {
-		
-		logger.info("---------------------------createBoardItemView.do---------------------------");
+	@RequestMapping(value = "/createBoardItemForm.do")
+	public ModelAndView createBoardItemView(@RequestParam("boardId") String boardId) throws Exception {
 		
 		BoardItem boardItem = new BoardItem(); 
 		
@@ -126,19 +129,7 @@ public class BoardController {
 		
 		mav.addObject("boardItem",boardItem);
 		
-		Board board = boardService.getBoard(boardId);
-		
-		//boardId에 따라 뷰페이지 세팅을 달리한다.
-		// 1 뉴스 게시판, 2 레슨 게시판, 3 워크샵 게시판
-		if("1".equals(boardId)) {
-			mav.setViewName("board/createNewsBoardForm");
-		} else if("2".equals(boardId)) {
-			mav.setViewName("board/createLessonBoardForm");
-		} else if("3".equals(boardId)) {
-			mav.setViewName("board/createWorkshopBoardForm");
-		} else if("4".equals(boardId)){
-			mav.setViewName("board/createStoryBoardForm");
-		}
+		mav.setViewName("board/createBoardItemForm");
 		
 		return mav;
 		

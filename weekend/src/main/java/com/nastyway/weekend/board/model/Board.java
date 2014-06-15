@@ -4,7 +4,6 @@ public class Board {
 	
 	private String boardId="";
 	private String boardName="";
-	private String boardType="";
 	
 	public String getBoardId() {
 		return boardId;
@@ -17,12 +16,6 @@ public class Board {
 	}
 	public void setBoardName(String boardName) {
 		this.boardName = boardName;
-	}
-	public String getBoardType() {
-		return boardType;
-	}
-	public void setBoardType(String boardType) {
-		this.boardType = boardType;
 	}
 	
 

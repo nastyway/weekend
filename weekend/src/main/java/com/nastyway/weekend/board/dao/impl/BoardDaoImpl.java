@@ -13,7 +13,8 @@ public class BoardDaoImpl extends SqlSessionDaoSupport implements BoardDao{
 	
 	@Override
 	public Board getBoard(String boardId) {
-		return null;
+		Board board = (Board)getSqlSession().selectOne(NAMESPACE+"getBoard",boardId);
+		return board;
 	}
 
 }

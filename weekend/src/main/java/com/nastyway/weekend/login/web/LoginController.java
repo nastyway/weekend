@@ -18,6 +18,8 @@ import org.springframework.web.servlet.ModelAndView;
 
 import com.nastyway.weekend.login.model.Login;
 import com.nastyway.weekend.login.service.LoginService;
+import com.nastyway.weekend.user.model.User;
+import com.nastyway.weekend.user.service.UserService;
 
 @Controller
 @RequestMapping("/login")
@@ -27,6 +29,9 @@ public class LoginController {
 
 	@Autowired
 	private LoginService loginService;
+	
+	@Autowired
+	private UserService userService;
 
 	/**
 	 * 로그인 체크 함수
@@ -38,8 +43,6 @@ public class LoginController {
 	 */
 	@RequestMapping("/loginForm.do")
 	public ModelAndView loginForm() {
-
-		logger.info("---------------------------LoginForm.do---------------------------");
 
 		ModelAndView mav = new ModelAndView("login/loginForm", "login", new Login());
 
@@ -57,20 +60,20 @@ public class LoginController {
 	@RequestMapping(value = "/loginProcess.do", method = RequestMethod.POST)
 	public String loginProcess(@ModelAttribute("login") Login login, BindingResult result, HttpServletRequest request) {
 
-		logger.info("---------------------------loginProcess.do---------------------------");
-
 		Map<String, String> loginParam = new HashMap<String, String>();
 		loginParam.put("userId", login.getUserId());
 		loginParam.put("password", login.getPassword());
 
 		if (loginService.getLoginResult(loginParam) > 0) {
 			// 세션에 유저 정보를 등록
+			User userInfo = userService.getUserInfo(login.getUserId());
+			
 			HttpSession session = request.getSession();
-			session.setAttribute("userInfo", loginParam);
+			session.setAttribute("userInfo", userInfo);
 
-			return "redirect:/main/main";
+			return "redirect:/main/main.do";
 		} else {
-			return "/login/loginForm";
+			return "redirect:/login/loginForm.do";
 		}
 	}
 
@@ -80,13 +83,11 @@ public class LoginController {
 	@RequestMapping(value = "/logout.do", method = RequestMethod.GET)
 	public String logout(HttpServletRequest request) {
 
-		logger.info("---------------------------logout.do---------------------------");
-		
 		// 세션삭제
 		HttpSession session = request.getSession();
 		session.invalidate();
 		
-		return "/login/loginForm";
+		return "/login/loginForm.do";
 	}
 
 }

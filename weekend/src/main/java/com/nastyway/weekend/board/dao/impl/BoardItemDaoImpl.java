@@ -7,6 +7,7 @@ import org.springframework.stereotype.Repository;
 
 import com.nastyway.weekend.board.dao.BoardItemDao;
 import com.nastyway.weekend.board.model.BoardItem;
+import com.nastyway.weekend.board.model.SearchBoardCondition;
 
 @Repository("BoardItemDao")
 public class BoardItemDaoImpl extends SqlSessionDaoSupport implements BoardItemDao {
@@ -14,8 +15,13 @@ public class BoardItemDaoImpl extends SqlSessionDaoSupport implements BoardItemD
 	private static String NAMESPACE = "com.nastyway.weekend.board.BoardItem.";
 	
 	@Override
-	public List<BoardItem> listBoardItem(String boardId) {
-		return null;
+	public int countBoardItem(SearchBoardCondition searchBoardCondition) {
+		return (int)getSqlSession().selectOne(NAMESPACE+"countBoardItem",searchBoardCondition);
+	}
+	
+	@Override
+	public List<BoardItem> listBoardItem(SearchBoardCondition searchBoardCondition) {
+		return getSqlSession().selectList(NAMESPACE+"listBoardItem",searchBoardCondition);
 	}
 
 	@Override
@@ -42,6 +48,5 @@ public class BoardItemDaoImpl extends SqlSessionDaoSupport implements BoardItemD
 	public int countListBoardSearchItem(BoardItem boardItem) {
 		return 0;
 	}
-
 	
 }

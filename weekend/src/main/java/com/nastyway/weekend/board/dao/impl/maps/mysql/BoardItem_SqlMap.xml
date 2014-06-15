@@ -3,38 +3,69 @@
     PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
-<mapper namespace="com.weekend.mobile.board.BoardItem">
+<mapper namespace="com.nastyway.weekend.board.BoardItem">
 
-	<select id="listBoardItem" parameterType="String" resultType="BoardItemObject">
+	<resultMap type="BoardItemObject" id="BoardItemResult">
+		<result property="num" 			column="row"/>
+		<result property="itemId" 		column="item_id"/>
+		<result property="boardId" 		column="board_id"/>
+		<result property="title" 		column="title"/>
+		<result property="hitCount" 	column="hit_count"/>
+		<result property="contents" 	column="contents"/>
+		<result property="startDate" 	column="start_date"/>
+		<result property="endDate" 		column="end_date"/>
+		<result property="registerId"	column="register_id"/>
+		<result property="registerName" column="register_name"/>
+		<result property="registerDate" column="register_date"/>
+	</resultMap>
+	
+	<select id="listBoardItem" parameterType="SearchBoardCondition" resultMap="BoardItemResult">
 		<![CDATA[
-		SELECT  ITEM_ID, 
-				BOARD_ID, 
-				TITLE,
-				HIT_COUNT,
-				CONTENTS,
-				START_DATE, 
-				END_DATE, 
-				REGISTER_ID,
-				REGISTER_NAME,
-				DATE(REGISTER_DATE) AS REGISTER_DATE,
-				DATE
-		FROM (
-				SELECT 
-					ITEM_ID, 
-					BOARD_ID, 
-					TITLE,
-					HIT_COUNT,
-					CONTENTS,
-					START_DATE, 
-					END_DATE, 
-					REGISTER_ID,
-					REGISTER_NAME,
-					TIMESTAMP(REGISTER_DATE) AS REGISTER_DATE,
-					DATE
-				FROM  WEEKEND_BD_BOARD_ITEM
-				WHERE BOARD_ID = #{boardId}
-				ORDER BY REGISTER_DATE DESC
-			) T1
+		SELECT  W.ROW,
+				W.ITEM_ID, 
+				W.BOARD_ID, 
+				W.TITLE,
+				W.HIT_COUNT,
+				W.CONTENTS,
+				W.START_DATE, 
+				W.END_DATE, 
+				W.REGISTER_ID,
+				W.REGISTER_NAME,
+				DATE_FORMAT(W.REGISTER_DATE, "%Y-%c-%e") AS REGISTER_DATE
+		FROM 	(
+				SELECT		@ROW := @ROW + 1 AS ROW,
+							O.*
+				FROM		( 	    
+							SELECT		ITEM_ID, 
+										BOARD_ID, 
+										TITLE,
+										HIT_COUNT,
+										CONTENTS,
+										START_DATE, 
+										END_DATE, 
+										REGISTER_ID,
+										REGISTER_NAME,
+										REGISTER_DATE
+							FROM  		WEEKEND_BD_BOARD_ITEM
+							WHERE 		BOARD_ID = #{boardId}
+							]]>
+							<if test='searchWord!=null'>
+							AND			TITLE like '%${searchWord}%'
+							</if>
+							<![CDATA[
+							ORDER BY 	REGISTER_DATE DESC
+							) O,  ( SELECT @ROW := 0 ) R
+				) W
+		WHERE	W.ROW >= #{startPageIndex}
+		AND		W.ROW <= #{endPageIndex}
+		]]>
+	</select>
+	
+	<select id="countBoardItem" parameterType="SearchBoardCondition" resultType="int">
+		<![CDATA[
+		SELECT  COUNT(*)
+		FROM 	WEEKEND_BD_BOARD_ITEM
+		WHERE 	BOARD_ID = #{boardId}
 		]]>
 	</select>
 	

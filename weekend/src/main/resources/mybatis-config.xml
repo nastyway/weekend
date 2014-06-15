@@ -16,6 +16,10 @@
 		<typeAlias alias="BoardObject" type="com.nastyway.weekend.board.model.Board" />
 		<typeAlias alias="BoardItemObject" type="com.nastyway.weekend.board.model.BoardItem" />
 		<typeAlias alias="FileMappingObject" type="com.nastyway.weekend.fileupload.model.FileMapping" />
+		<typeAlias alias="SearchBoardCondition" type="com.nastyway.weekend.board.model.SearchBoardCondition" />
+		
+		<!-- User -->
+		<typeAlias alias="UserObject" type="com.nastyway.weekend.user.model.User"/>
 		
 	</typeAliases>
 

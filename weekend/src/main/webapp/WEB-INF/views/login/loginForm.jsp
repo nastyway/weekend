@@ -1,13 +1,17 @@
 <%@ include file="/base/common/taglibs.jsp"%>
 <%@ page language="java" errorPage="/base/common/error.jsp"
 	pageEncoding="UTF-8" contentType="text/html;charset=utf-8"%>
-<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<!DOCTYPE html>
 
 <html>
 <head>
 	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-	<script src="//code.jquery.com/jquery-2.1.1.min.js"></script>
-	<link href="/base/css/login.css" rel="stylesheet" type="text/css">
+	<link href="<c:url value='/base/css/login.css' />" rel="stylesheet" type="text/css">
+	<script type="text/javascript">
+		$('#toggle-login').click(function(){
+		  $('#login').toggle();
+		});
+	</script>
 </head>
 <body>
 	<span href="#" class="button" id="toggle-login">Log in</span>

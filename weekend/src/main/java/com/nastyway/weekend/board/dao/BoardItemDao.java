@@ -3,13 +3,19 @@ package com.nastyway.weekend.board.dao;
 import java.util.List;
 
 import com.nastyway.weekend.board.model.BoardItem;
+import com.nastyway.weekend.board.model.SearchBoardCondition;
 
 public interface BoardItemDao {
 
 	/**
+	 * 게시글 목록 갯수 조회 
+	 */
+	public int countBoardItem(SearchBoardCondition searchBoardCondition);
+	
+	/**
 	 * 게시글 목록 조회 
 	 */
-	public List<BoardItem> listBoardItem(String boardId);
+	public List<BoardItem> listBoardItem(SearchBoardCondition searchBoardCondition);
 	
 	/**
 	 * 게시글 상세 조회 
