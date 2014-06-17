@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.nastyway.weekend.fileupload">
+	
+	<resultMap type="FileUploadObject" id="FileUploadResult">
+		<result property="fileId" 				column="file_id"/>
+		<result property="fileStoredName" 		column="file_stored_name"/>
+		<result property="filePath" 			column="file_path"/>
+		<result property="fileOriginalName" 	column="file_original_name"/>
+		<result property="fileContentType" 		column="file_content_type"/>
+		<result property="registerId" 			column="register_id"/>
+		<result property="registerName" 		column="register_name"/>
+		<result property="registerDate" 		column="register_date"/>
+		<result property="fileSize"				column="file_size"/>
+	</resultMap>
+
+	<insert id="createFile" parameterType="FileUploadObject">
+		INSERT INTO WEEKEND_FD_FILE
+		(file_id, file_stored_name, file_path, file_original_name, file_content_type, register_id, register_name, register_date, file_size) 
+		VALUES (#{fileId}, #{fileStoredName}, #{filePath}, #{fileOriginalName}, #{fileContentType}, #{registerId}, #{registerName}, now(), #{fileSize})
+	</insert>
+	
+	<insert id="createMapping" parameterType="FileUploadObject">
+		INSERT INTO WEEKEND_FD_FILE_MAPPING
+		(item_id, file_id, sort_order) 
+		VALUES (#{itemId}, #{fileId}, #{sortOrder})
+	</insert>
+	
+	<select id="getFileInfo" parameterType="String" resultMap="FileUploadResult">
+		SELECT 	*
+		FROM	WEEKEND_FD_FILE
+		WHERE	FILE_ID = #{fileId}
+	</select>
+	
+</mapper>

@@ -1,5 +1,7 @@
 package com.nastyway.config;
 
+import java.util.Enumeration;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
@@ -21,6 +23,12 @@ public class CorsInterceptor implements HandlerInterceptor
     {
     	logger.debug("Client IP : "+request.getRemoteHost()+", requested URL : "+request.getRequestURL());
         String rootPath = request.getContextPath()+"/login/loginForm.do";
+        
+        Enumeration<String> paramNames = request.getParameterNames();
+		while(paramNames.hasMoreElements()) {
+			String key = paramNames.nextElement();
+			System.out.println("key : "+ key+", value : "+request.getParameter(key));
+		}
         
         //로그인 쪽은 세션체크에서 배제하자.
         String[] requestURI = request.getRequestURI().split("/");

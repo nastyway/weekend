@@ -9,7 +9,7 @@ import com.nastyway.weekend.fileupload.model.FileUpload;
 @Repository
 public class FileUploadDaoImpl extends SqlSessionDaoSupport implements FileUploadDao{
 	
-	private String namespace = "com.weekend.mobile.fileupload.";
+	private String namespace = "com.nastyway.weekend.fileupload.";
 
 	@Override
 	public void createFile(FileUpload file) {

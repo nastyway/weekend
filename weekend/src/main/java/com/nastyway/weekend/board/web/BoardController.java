@@ -8,8 +8,10 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.multipart.MultipartHttpServletRequest;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.view.RedirectView;
 
@@ -20,7 +22,7 @@ import com.nastyway.weekend.board.service.BoardItemService;
 import com.nastyway.weekend.board.service.BoardService;
 import com.nastyway.weekend.fileupload.model.FileMapping;
 
-@Controller
+@Controller("BoardController")
 @RequestMapping("/board")
 public class BoardController {
 
@@ -128,6 +130,22 @@ public class BoardController {
 		boardItem.setBoardId(boardId);
 		
 		mav.addObject("boardItem",boardItem);
+		
+		mav.setViewName("board/createBoardItemForm");
+		
+		return mav;
+		
+	}
+	
+	/**
+	 * 게시글 등록
+	 * 
+	 * @return ModelAndView
+	 */
+	@RequestMapping(value = "/createBoardItem.do")
+	public ModelAndView createBoardItem(@ModelAttribute("boardItem") BoardItem boardItem) throws Exception {
+		
+		ModelAndView mav = new ModelAndView();
 		
 		mav.setViewName("board/createBoardItemForm");
 		

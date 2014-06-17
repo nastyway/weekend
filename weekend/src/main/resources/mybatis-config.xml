@@ -20,6 +20,9 @@
 		
 		<!-- User -->
 		<typeAlias alias="UserObject" type="com.nastyway.weekend.user.model.User"/>
+
+		<!-- FileUpload -->
+		<typeAlias alias="FileUploadObject" type="com.nastyway.weekend.fileupload.model.FileUpload"/>
 		
 	</typeAliases>
 

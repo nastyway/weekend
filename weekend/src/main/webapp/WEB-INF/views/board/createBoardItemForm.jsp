@@ -9,29 +9,16 @@
 	$(document).ready(function(){
 		CKEDITOR.replace( 
 			'editor1',	{
-				filebrowserBrowseUrl: "<c:url value='/fileupload/uploadFile.do'/>",
-			    filebrowserUploadUrl: "<c:url value='/fileupload/uploadFile.do'/>"
+				filebrowserBrowseUrl: "<c:url value='/fileupload/showImge.do'/>",
+			    filebrowserUploadUrl: "<c:url value='/fileupload/ckImageUpload.do'/>"
 	        }
 		); 
 		
-		window.opener.CKEDITOR.tools.callFunction( funcNum, fileUrl, function() {
-			alert("start");
-		    // Get the reference to a dialog window.
-		    var element,
-		        dialog = this.getDialog();
-		    // Check if this is the Image dialog window.
-		    if ( dialog.getName() == 'image' ) {
-		    	alert("image");
-		        // Get the reference to a text field that holds the "alt" attribute.
-		        element = dialog.getContentElement( 'info', 'txtAlt' );
-		        // Assign the new value.
-		        if ( element )
-		            element.setValue( 'alt text' );
-		    }
-		    // Return false to stop further execution - in such case CKEditor will ignore the second argument (fileUrl)
-		    // and the onSelect function assigned to a button that called the file browser (if defined).
-		    //return false;
-		});
+		$("#form").submit(function(){
+			var editor_data = CKEDITOR.instances.editor1.getData(); 
+			$("#contents").attr('value',editor_data);
+			alert(editor_data);
+		})
 	});
 </script>
 </head>
@@ -42,18 +29,20 @@
 		</div>
 	</div>
 	<div class="container">
-		<form class="form-horizontal" role="form">
+		<c:url var="post_url" value="/board/createBoardItem.do" />
+		<form:form id="form" commandName="boardItem" class="form-horizontal" role="form" method="post" action="${post_url}" >
+			<form:hidden path="boardId" value="${boardItem.boardId }"/>
 			<div class="form-group">
-				<label for="inputEmail1" class="col-lg-2 control-label">Title</label>
+				<form:label path="title" class="col-lg-2 control-label">Title</form:label>
 				<div class="col-lg-10">
-					<input type="email" class="form-control" id="inputEmail1" placeholder="Title">
+					<form:input path="title" type="text" class="form-control" id="title" placeholder="Title" />
 				</div>
 			</div>
 			<div class="form-group">
-				<label for="inputPassword1" class="col-lg-2 control-label">Content</label>
+				<form:label path="contents" class="col-lg-2 control-label">Content</form:label>
 				<div class="col-lg-10">
+					<form:hidden path="contents" id="contents" value="" />
 					<textarea class="form-control" name="editor1" id="editor1" rows="10" cols="80">
-					This is my textarea to be replaced with CKEditor.
 					</textarea>
 				</div>
 			</div>
@@ -62,7 +51,7 @@
 					<button type="submit" class="btn btn-default">Submit</button>
 				</div>
 			</div>
-		</form>
+		</form:form>
 	</div>
 </body>
 </html>

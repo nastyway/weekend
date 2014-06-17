@@ -21,7 +21,7 @@ import com.nastyway.weekend.login.service.LoginService;
 import com.nastyway.weekend.user.model.User;
 import com.nastyway.weekend.user.service.UserService;
 
-@Controller
+@Controller("LoginController")
 @RequestMapping("/login")
 public class LoginController {
 

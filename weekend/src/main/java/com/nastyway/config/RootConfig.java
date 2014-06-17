@@ -1,5 +1,7 @@
 package com.nastyway.config;
 
+import java.io.IOException;
+
 import javax.sql.DataSource;
 
 import org.apache.commons.dbcp.BasicDataSource;
@@ -10,14 +12,17 @@ import org.mybatis.spring.SqlSessionTemplate;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.beans.factory.config.PropertyPlaceholderConfigurer;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.io.ClassPathResource;
-import org.springframework.core.io.Resource;
 import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 @Configuration
 @EnableTransactionManagement
+@ComponentScan(
+	    basePackages="com.nastyway.weekend",
+	    excludeFilters=@ComponentScan.Filter(Configuration.class))
 public class RootConfig {
 
 	@Value("${jdbc.driverClassName}")
@@ -32,13 +37,13 @@ public class RootConfig {
 	@Value("${jdbc.password}")
 	private String jdbcPassword;
 
-	private static final String APP_CONFIG_FILE_PATH = "jdbc.xml";
 	private static final String MYBATIS_CONFIG_FILE_PATH = "mybatis-config.xml";
 
 	@Bean
-	public static PropertyPlaceholderConfigurer propertyPlaceholderConfigurer() {
+	public static PropertyPlaceholderConfigurer propertyPlaceholderConfigurer() throws IOException {
 		PropertyPlaceholderConfigurer ppc = new PropertyPlaceholderConfigurer();
-		ppc.setLocations(new Resource[] { new ClassPathResource(APP_CONFIG_FILE_PATH) });
+//		ppc.setLocations(new Resource[] { new ClassPathResource(APP_CONFIG_FILE_PATH) });
+		ppc.setLocations(new PathMatchingResourcePatternResolver().getResources("*.properties"));
 		return ppc;
 	}
 

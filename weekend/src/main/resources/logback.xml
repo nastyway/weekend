@@ -25,7 +25,7 @@
 	</appender>
 	
 	<logger name="org.springframework" additivity="false">
-		<level value="INFO" />
+		<level value="DEBUG" />
 		<appender-ref ref="dailyRollingFileAppender" />
 		<appender-ref ref="consoleAppender" />
 	</logger>
