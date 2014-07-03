@@ -1,5 +1,7 @@
 package com.nastyway.weekend.fileupload.service.impl;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -23,6 +25,16 @@ public class FileUploadServiceImpl implements FileUploadService{
 	public FileUpload getFileInfo(String fileId) {
 		
 		return fileUploadDao.getFileInfo(fileId);
+	}
+
+	@Override
+	public void deleteFile(String fileId) {
+		fileUploadDao.deleteFile(fileId);
+	}
+
+	@Override
+	public List<FileUpload> retrieveFileList(String itemId) {
+		return fileUploadDao.retrieveFileList(itemId);
 	}
 
 }

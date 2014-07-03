@@ -16,6 +16,7 @@ import org.springframework.scheduling.annotation.EnableAsync;
 import org.springframework.web.multipart.MultipartResolver;
 import org.springframework.web.multipart.commons.CommonsMultipartResolver;
 import org.springframework.web.servlet.ViewResolver;
+import org.springframework.web.servlet.config.annotation.DefaultServletHandlerConfigurer;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
@@ -37,11 +38,19 @@ import org.springframework.web.servlet.view.tiles3.TilesViewResolver;
 public class WebConfig extends WebMvcConfigurerAdapter // 인터셉터를 추가하기 위해 WebMvcConfigurerAdapter 를 상속한다
 {
 	
-	@Override
+	/*@Override
 	public void addResourceHandlers(ResourceHandlerRegistry registry) 
 	{
 		registry.addResourceHandler("/base/**").addResourceLocations("/base/");
-	}
+	}*/
+	
+	/**
+     * @param  Set default servlet handler, this is the same as <mvc:default-servlet-handler/>
+     */
+    @Override
+    public void configureDefaultServletHandling(DefaultServletHandlerConfigurer configurer) {
+        configurer.enable();
+    }
 	
 	@Bean
 	public static PropertyPlaceholderConfigurer propertyPlaceholderConfigurer() throws IOException {
@@ -61,15 +70,6 @@ public class WebConfig extends WebMvcConfigurerAdapter // 인터셉터를 추가하기 위
         resolver.setPrefix("/WEB-INF/views/");
         resolver.setSuffix(".jsp");
         return resolver;
-    }
-    
-    /**
-     * 인터셉터 추가
-     */
-    @Override
-    public void addInterceptors(InterceptorRegistry registry)
-    {
-        registry.addInterceptor(new CorsInterceptor());
     }
     
     /**

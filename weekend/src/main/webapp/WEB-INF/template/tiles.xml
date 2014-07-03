@@ -21,12 +21,20 @@
         <put-attribute name="content" value="/WEB-INF/views/main/main.jsp" />
     </definition>
 
+	<!-- Board -->
 	<definition name="board/retrieveBoardItemList" extends="baseLayout">
         <put-attribute name="content" value="/WEB-INF/views/board/retrieveBoardItemList.jsp" />
+    </definition>
+    <definition name="board/retrieveBoardItemDetail" extends="baseLayout">
+        <put-attribute name="content" value="/WEB-INF/views/board/retrieveBoardItemDetail.jsp" />
     </definition>
     
     <definition name="board/createBoardItemForm" extends="baseLayout">
         <put-attribute name="content" value="/WEB-INF/views/board/createBoardItemForm.jsp" />
+    </definition>
+    
+    <definition name="board/updateBoardItemForm" extends="baseLayout">
+        <put-attribute name="content" value="/WEB-INF/views/board/updateBoardItemForm.jsp" />
     </definition>
     
 </tiles-definitions>

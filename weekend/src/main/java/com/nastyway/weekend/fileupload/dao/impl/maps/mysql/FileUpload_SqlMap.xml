@@ -10,23 +10,25 @@
 		<result property="fileStoredName" 		column="file_stored_name"/>
 		<result property="filePath" 			column="file_path"/>
 		<result property="fileOriginalName" 	column="file_original_name"/>
-		<result property="fileContentType" 		column="file_content_type"/>
+		<result property="thumbnailName" 		column="thumbnail_name"/>
+		<result property="fileContentType" 	 	column="file_content_type"/>
 		<result property="registerId" 			column="register_id"/>
 		<result property="registerName" 		column="register_name"/>
 		<result property="registerDate" 		column="register_date"/>
 		<result property="fileSize"				column="file_size"/>
+		<result property="thumbnailSize"		column="thumbnail_size"/>
 	</resultMap>
 
 	<insert id="createFile" parameterType="FileUploadObject">
 		INSERT INTO WEEKEND_FD_FILE
-		(file_id, file_stored_name, file_path, file_original_name, file_content_type, register_id, register_name, register_date, file_size) 
-		VALUES (#{fileId}, #{fileStoredName}, #{filePath}, #{fileOriginalName}, #{fileContentType}, #{registerId}, #{registerName}, now(), #{fileSize})
+		(file_id, file_stored_name, file_path, file_original_name, file_content_type, register_id, register_name, register_date, file_size, thumbnail_name, thumbnail_size) 
+		VALUES (#{fileId}, #{fileStoredName}, #{filePath}, #{fileOriginalName}, #{fileContentType}, #{registerId}, #{registerName}, now(), #{fileSize}, #{thumbnailName}, #{thumbnailSize})
 	</insert>
 	
 	<insert id="createMapping" parameterType="FileUploadObject">
 		INSERT INTO WEEKEND_FD_FILE_MAPPING
-		(item_id, file_id, sort_order) 
-		VALUES (#{itemId}, #{fileId}, #{sortOrder})
+		(item_id, file_id) 
+		VALUES (#{itemId}, #{fileId})
 	</insert>
 	
 	<select id="getFileInfo" parameterType="String" resultMap="FileUploadResult">
@@ -35,4 +37,16 @@
 		WHERE	FILE_ID = #{fileId}
 	</select>
 	
+	<select id="retrieveFileList" parameterType="String" resultMap="FileUploadResult">
+		SELECT 	*
+		FROM	WEEKEND_FD_FILE A, WEEKEND_FD_FILE_MAPPING B
+		WHERE	A.FILE_ID = B.FILE_ID
+		AND		B.ITEM_ID = #{itemId}
+	</select>
+	
+	<delete id="deleteFile" parameterType="String"> 
+		DELETE
+		FROM	WEEKEND_FD_FILE_MAPPING
+		WHERE	FILE_ID = #{fileId}
+	</delete>
 </mapper>

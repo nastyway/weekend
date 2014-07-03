@@ -1,5 +1,7 @@
 package com.nastyway.weekend.fileupload.dao.impl;
 
+import java.util.List;
+
 import org.mybatis.spring.support.SqlSessionDaoSupport;
 import org.springframework.stereotype.Repository;
 
@@ -26,4 +28,13 @@ public class FileUploadDaoImpl extends SqlSessionDaoSupport implements FileUploa
 		return (FileUpload)getSqlSession().selectOne(namespace+"getFileInfo",fileId);
 	}
 
+	@Override
+	public void deleteFile(String fileId) {
+		getSqlSession().delete(namespace+"deleteFile",fileId);
+	}
+
+	@Override
+	public List<FileUpload> retrieveFileList(String itemId) {
+		return getSqlSession().selectList(namespace+"retrieveFileList",itemId);
+	}
 }

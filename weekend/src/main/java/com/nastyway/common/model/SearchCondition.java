@@ -6,7 +6,7 @@ public class SearchCondition {
 	
 	private int pageSize=10;
 	
-	private int pageIndex;
+	private int pageIndex=1;
 
 	private int totalPageSize;
 	
@@ -15,6 +15,8 @@ public class SearchCondition {
 	private int endPageIndex;
 	
 	private int totalItemCount;
+	
+	private int paginationBlock = 10;
 
 	public String getSearchWord() {
 		return searchWord;
@@ -70,5 +72,13 @@ public class SearchCondition {
 
 	public void setTotalItemCount(int totalItemCount) {
 		this.totalItemCount = totalItemCount;
+	}
+
+	public int getPaginationBlock() {
+		return paginationBlock;
+	}
+
+	public void setPaginationBlock(int paginationBlock) {
+		this.paginationBlock = paginationBlock;
 	}
 }

@@ -20,6 +20,7 @@ public class BoardItem {
 	private String registerDate = "";
 	
 	private List<String> uploadedImagesUrl;
+	private List<String> uploadedThumbnailUrl;
 	
 	private String fileId = "";
 	private List<FileMapping> attachFiles;
@@ -135,6 +136,12 @@ public class BoardItem {
 	}
 	public void setSearchWord(String searchWord) {
 		this.searchWord = searchWord;
+	}
+	public List<String> getUploadedThumbnailUrl() {
+		return uploadedThumbnailUrl;
+	}
+	public void setUploadedThumbnailUrl(List<String> uploadedThumbnailUrl) {
+		this.uploadedThumbnailUrl = uploadedThumbnailUrl;
 	}
 	
 

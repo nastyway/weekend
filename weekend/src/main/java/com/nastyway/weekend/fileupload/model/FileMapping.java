@@ -2,46 +2,24 @@ package com.nastyway.weekend.fileupload.model;
 
 public class FileMapping {
 	
-	private String mapping_id;
+	private String itemId;
 	
-	private String item_id;
-	
-	private String file_id;
-	
-	private String sort_order;
+	private String fileId;
 
-	public String getMapping_id() {
-		return mapping_id;
+	public String getItemId() {
+		return itemId;
 	}
 
-	public void setMapping_id(String mapping_id) {
-		this.mapping_id = mapping_id;
+	public void setItemId(String itemId) {
+		this.itemId = itemId;
 	}
 
-	public String getItem_id() {
-		return item_id;
+	public String getFileId() {
+		return fileId;
 	}
 
-	public void setItem_id(String item_id) {
-		this.item_id = item_id;
+	public void setFileId(String fileId) {
+		this.fileId = fileId;
 	}
-
-	public String getFile_id() {
-		return file_id;
-	}
-
-	public void setFile_id(String file_id) {
-		this.file_id = file_id;
-	}
-
-	public String getSort_order() {
-		return sort_order;
-	}
-
-	public void setSort_order(String sort_order) {
-		this.sort_order = sort_order;
-	}
-	
-	
 
 }

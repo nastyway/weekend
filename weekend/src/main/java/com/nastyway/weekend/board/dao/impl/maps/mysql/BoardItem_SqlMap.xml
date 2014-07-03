@@ -5,7 +5,7 @@
 
 <mapper namespace="com.nastyway.weekend.board.BoardItem">
 
-	<resultMap type="BoardItemObject" id="BoardItemResult">
+	<resultMap type="BoardItemObject" id="SearchListResult">
 		<result property="num" 			column="row"/>
 		<result property="itemId" 		column="item_id"/>
 		<result property="boardId" 		column="board_id"/>
@@ -19,7 +19,25 @@
 		<result property="registerDate" column="register_date"/>
 	</resultMap>
 	
-	<select id="listBoardItem" parameterType="SearchBoardCondition" resultMap="BoardItemResult">
+	<resultMap type="BoardItemObject" id="BoardItemResult">
+		<result property="num" 			column="row"/>
+		<result property="itemId" 		column="item_id"/>
+		<result property="boardId" 		column="board_id"/>
+		<result property="title" 		column="title"/>
+		<result property="hitCount" 	column="hit_count"/>
+		<result property="contents" 	column="contents"/>
+		<result property="startDate" 	column="start_date"/>
+		<result property="endDate" 		column="end_date"/>
+		<result property="registerId"	column="register_id"/>
+		<result property="registerName" column="register_name"/>
+		<result property="registerDate" column="register_date"/>
+	</resultMap>
+	<resultMap type="FileMappingObject" id="FileMappingResult">
+		<result property="itemId" 		column="item_id"/>
+		<result property="fileId"	    column="file_id"/>
+	</resultMap>
+	
+	<select id="listBoardItem" parameterType="SearchBoardCondition" resultMap="SearchListResult">
 		<![CDATA[
 		SELECT  W.ROW,
 				W.ITEM_ID, 
@@ -27,11 +45,11 @@
 				W.TITLE,
 				W.HIT_COUNT,
 				W.CONTENTS,
-				W.START_DATE, 
-				W.END_DATE, 
+				DATE_FORMAT(W.START_DATE,"%Y-%m-%e") AS START_DATE, 
+				DATE_FORMAT(W.END_DATE, "%Y-%m-%e") AS END_DATE, 
 				W.REGISTER_ID,
 				W.REGISTER_NAME,
-				DATE_FORMAT(W.REGISTER_DATE, "%Y-%c-%e") AS REGISTER_DATE
+				DATE_FORMAT(W.REGISTER_DATE, "%Y-%m-%e") AS REGISTER_DATE
 		FROM 	(
 				SELECT		@ROW := @ROW + 1 AS ROW,
 							O.*
@@ -47,8 +65,15 @@
 										REGISTER_NAME,
 										REGISTER_DATE
 							FROM  		WEEKEND_BD_BOARD_ITEM
-							WHERE 		BOARD_ID = #{boardId}
 							]]>
+							<if test='boardIdList==null'>
+							WHERE 		BOARD_ID = #{boardId}
+							</if>
+							<if test='boardIdList!=null'>
+							WHERE 		BOARD_ID in (
+									<foreach collection="boardIdList" item="entity" separator=",">#{entity}</foreach>
+									)
+							</if>
 							<if test='searchWord!=null'>
 							AND			TITLE like '%${searchWord}%'
 							</if>
@@ -69,60 +94,39 @@
 		]]>
 	</select>
 	
-	<select id="getBoardItem" parameterType="Map" resultType="BoardItemObject">
+	<select id="getBoardItem" parameterType="BoardItemObject" resultMap="BoardItemResult">
 		SELECT  ITEM_ID, 
 				BOARD_ID, 
 				TITLE,
 				HIT_COUNT,
 				CONTENTS,
-				START_DATE, 
-				END_DATE, 
+				DATE_FORMAT(START_DATE,"%Y-%m-%e") AS START_DATE, 
+				DATE_FORMAT(END_DATE, "%Y-%m-%e") AS END_DATE, 
 				REGISTER_ID,
 				REGISTER_NAME,
-				DATE(REGISTER_DATE) AS REGISTER_DATE,
-				GENRE,
-				PLACE,
-				MC,
-				JUDGE,
-				GUEST,
-				TUTOR,
-				TEL,
-				EMAIL,
-				KAKAOTALK,
-				FACEBOOK,
-				TWITTER,
-				INSTAGRAM,
-				DJ,
-				COORDINATE,
-				DATE,
-				ADDRESS1,
-				ADDRESS2
+				DATE_FORMAT(REGISTER_DATE,"%Y-%m-%e") AS REGISTER_DATE
 		FROM WEEKEND_BD_BOARD_ITEM
 		WHERE BOARD_ID = #{boardId}
 		AND   ITEM_ID = #{itemId}
 	</select>
 	
-	<insert id="createBoardItem" parameterType="BoardItemObject">
+	<insert id="createBoardItem" parameterType="Map">
 		INSERT INTO WEEKEND_BD_BOARD_ITEM
-		(ITEM_ID, BOARD_ID, TITLE, CONTENTS, HIT_COUNT, START_DATE, END_DATE, REGISTER_ID, REGISTER_NAME, REGISTER_DATE,
-		GENRE, PLACE, MC, JUDGE, GUEST, TUTOR, TEL, EMAIL, KAKAOTALK, FACEBOOK, TWITTER, INSTAGRAM, DATE, DATE_TIME, DJ, COORDINATE,
-		ADDRESS1, ADDRESS2) 
-		VALUES (#{item_id}, #{board_id}, #{title}, #{contents}, 1, #{start_date}, #{end_date}, #{register_id}, #{register_name}, NOW(),
-		#{genre},#{place},#{mc},#{judge},#{guest},#{tutor},#{tel},#{email},#{kakaotalk},#{facebook},#{twitter},#{instagram},#{date},#{date_time},#{dj},#{coordinate},
-		#{address1},#{address2});
+		(ITEM_ID, BOARD_ID, TITLE, HIT_COUNT, CONTENTS, START_DATE, END_DATE, REGISTER_ID, REGISTER_NAME, REGISTER_DATE) 
+		VALUES (#{itemId},#{boardId},#{title},1,#{contents},#{startDate},#{endDate},#{registerId},#{registerName},NOW());
 	</insert>
 	
-	<select id="getMappedFileInfo" parameterType="String" resultType="FileMappingObject">
+	<select id="getMappedFileInfo" parameterType="String" resultMap="FileMappingResult">
 		SELECT	 *
 		FROM	WEEKEND_FD_FILE_MAPPING
-		WHERE	ITEM_ID = #{boardId}
+		WHERE	ITEM_ID = #{itemId}
 	</select>
 	
 	<delete id="deleteBoardItem" parameterType="BoardItemObject">
 		DELETE 
 		FROM	WEEKEND_BD_BOARD_ITEM
-		WHERE	ITEM_ID = #{item_id}
-		AND		BOARD_ID = #{board_id}
+		WHERE	ITEM_ID = #{itemId}
+		AND		BOARD_ID = #{boardId}
 	</delete>
 	
 	<select id="listBoardSearchItem" parameterType="BoardItemObject" resultType="BoardItemObject">
@@ -170,37 +174,12 @@
 		]]>
 	</select>
 	
-	<select id="countListBoardSearchItem" parameterType="BoardItemObject" resultType="int">
-		<![CDATA[
-		SELECT  COUNT(*)
-		FROM (
-				SELECT 
-					ITEM_ID, 
-					BOARD_ID, 
-					TITLE,
-					HIT_COUNT,
-					CONTENTS,
-					START_DATE, 
-					END_DATE, 
-					REGISTER_ID,
-					REGISTER_NAME,
-					TIMESTAMP(REGISTER_DATE) AS REGISTER_DATE,
-					DATE
-				FROM  WEEKEND_BD_BOARD_ITEM
-				WHERE 1=1
-				]]> 
-				<if test="board_id1 == null or board_id1 == ''">
-					AND   BOARD_ID = #{board_id}
-				</if>
-				<if test="board_id1 != null and board_id1 != ''">
-					AND   (BOARD_ID = #{board_id} or BOARD_ID = #{board_id1})
-				</if>
-				<if test="search_word != null and search_word != ''">
-					AND	  (TITLE LIKE  '%${search_word}%' or CONTENTS LIKE '%${search_word}%')
-				</if>
-				<![CDATA[
-				ORDER BY REGISTER_DATE DESC
-			) T1
-		]]>
-	</select>
+	<update id="updateBoardItem" parameterType="Map">
+		UPDATE	WEEKEND_BD_BOARD_ITEM
+		SET		TITLE = #{title},
+				CONTENTS = #{contents},
+				START_DATE = #{startDate},
+				END_DATE = #{endDate}
+		WHERE	ITEM_ID = #{itemId}
+	</update>
 </mapper>

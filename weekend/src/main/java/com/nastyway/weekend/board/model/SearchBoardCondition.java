@@ -1,5 +1,7 @@
 package com.nastyway.weekend.board.model;
 
+import java.util.List;
+
 import com.nastyway.common.model.SearchCondition;
 
 public class SearchBoardCondition extends SearchCondition {
@@ -14,6 +16,9 @@ public class SearchBoardCondition extends SearchCondition {
 	private String registerId = "";
 	private String registerName = "";
 	private String registerDate = "";
+	
+	// 검색할 게시판이 여러개일때.
+	private List<Integer> boardIdList;
 	
 	public String getItemId() {
 		return itemId;
@@ -74,6 +79,12 @@ public class SearchBoardCondition extends SearchCondition {
 	}
 	public void setRegisterDate(String registerDate) {
 		this.registerDate = registerDate;
+	}
+	public List<Integer> getBoardIdList() {
+		return boardIdList;
+	}
+	public void setBoardIdList(List<Integer> boardIdList) {
+		this.boardIdList = boardIdList;
 	}
 
 }
