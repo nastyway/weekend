@@ -15,11 +15,11 @@
 		});
 		
 		$("#delete").click(function() {
-			location.href="<c:url value='/board/deleteBoardItem.do?boardId=${boardItem.boardId}&itemId=${boardItem.itemId}'/>";
+			location.href="<c:url value='/board/deleteBoardItem.do?boardId=${boardItem.boardId}&itemId=${boardItem.itemId}&pageIndex=${pageIndex}'/>";
 		});
 		
 		$("#update").click(function() {
-			location.href="<c:url value='/board/updateBoardItemForm.do?boardId=${boardItem.boardId}&itemId=${boardItem.itemId}'/>";
+			location.href="<c:url value='/board/updateBoardItemForm.do?boardId=${boardItem.boardId}&itemId=${boardItem.itemId}&pageIndex=${pageIndex}'/>";
 		});
 		
 		$('li a').click(function (e) {
@@ -58,6 +58,22 @@
 			</div>
 			<div class="panel-body">
 				${boardItem.endDate }
+			</div>
+		</div>
+		<div class="panel panel-default">
+			<div class="panel-heading">
+				<h3 class="panel-title">Date</h3>
+			</div>
+			<div class="panel-body">
+				${boardItem.date }
+			</div>
+		</div>
+		<div class="panel panel-default">
+			<div class="panel-heading">
+				<h3 class="panel-title">Coordinate</h3>
+			</div>
+			<div class="panel-body">
+				${boardItem.coordinate }
 			</div>
 		</div>
 		<hr>

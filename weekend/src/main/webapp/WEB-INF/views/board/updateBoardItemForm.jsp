@@ -17,8 +17,13 @@
 <script type="text/javascript">
 
 	var uploadFileNumber = 0;
+	var deletePictureList = new Array();
 
 	$(document).ready(function(){
+		
+		$("#bfh-datepicker1").val("${boardItem.startDate}");
+		$("#bfh-datepicker2").val("${boardItem.endDate}");
+		
 		CKEDITOR.replace( 
 			'editor1',	{
 				filebrowserBrowseUrl: "<c:url value='/fileupload/showImge.do'/>",
@@ -27,7 +32,7 @@
 		); 
 		
 		$("#cancel").click(function() {
-			location.href="<c:url value='/board/retrieveBoardItemList.do?boardId=${boardItem.boardId}&pageIndex=1'/>";
+			window.history.back();
 		});
 		
 		$('#datepickers').bfhdatepicker('toggle');
@@ -86,7 +91,6 @@
 	        },
 	        message: 'This value is not valid',
 	        submitHandler: function(validator, form, submitButton) {
-	        	
 	        	//날짜비교를 한다. 종료일은 시작일보다 이전일 수 없다.
 				var startDate = $("#bfh-datepicker1").val();
 	        	var endDate = $("#bfh-datepicker2").val();
@@ -121,6 +125,11 @@
 			//파일아이디를 다 넣고
 			$('<input>').attr('type','hidden').attr('name','fileIdList[]').val(file.fileId).appendTo('form');
 			uploadFileNumber -= 1;
+			
+			if(uploadFileNumber==0){
+				//섭밋을 한다.
+				$("#submitItemHidden").click();
+			}
 		});
 
 		if(uploadFileNumber==0){
@@ -138,15 +147,60 @@
 				'/cors/result.html?%s'
 			)
 		);
-
-		$("#writeItem").click(function(e) {
-	
-			if($(".btn.btn-primary.start").length>0){
-				uploadFileNumber = $(".btn.btn-primary.start").length;
 		
-				$(".btn.btn-primary.start").each(function(index,element){
-					$(this).trigger("click");
-				});
+		// Load existing files:
+        $('#fileupload').addClass('fileupload-processing');
+        $.ajax({
+            // Uncomment the following to send cross-domain cookies:
+            //xhrFields: {withCredentials: true},
+            url: "<c:url value='/fileupload/retrieveFileList/${boardItem.itemId}'/>",
+            dataType: 'json',
+            context: $('#fileupload')[0]
+        }).always(function () {
+            $(this).removeClass('fileupload-processing');
+        }).done(function (result) {
+            $(this).fileupload('option', 'done')
+                .call(this, $.Event('done'), {result: result});
+         	
+            //지워질 데이터를 배열에 저장한 후 마지막에 한꺼번에 처리한다.
+            $(".btn.btn-danger.delete").click(function() {
+	            //deleteUrl
+	            var deleteUrl = $(this).attr("var");
+	            deletePictureList.push(deleteUrl);
+            });
+        });
+        
+        $(".btn.btn-danger.delete").click(function() {
+	       	//deleteUrl
+	       	var deleteUrl = $(this).attr("var");
+	       	deletePictureList.push(deleteUrl);
+       	});
+        
+		$("#writeItem").click(function(e) {
+			if($(".btn.btn-primary.start").length>0 || $('.btn.btn-danger.delete').length>0){
+				//지울이미지가 있으면 먼저 삭제하고,
+				if(deletePictureList.length>0){
+					for(var i=0; i<deletePictureList.length; i++) {
+						$.ajax({
+							type:"POST",
+							url : deletePictureList[i],
+							success: function(result){
+								console.debug(result);
+							},
+							error: function(result){
+								console.debug(result);
+							}
+						});
+					}
+				}
+				uploadFileNumber = $(".btn.btn-primary.start").length;
+				if(uploadFileNumber==0 && $('.btn.btn-danger.delete').length>0){
+					$("#submitItemHidden").click();
+				} else {
+					$(".btn.btn-primary.start").each(function(index,element){
+						$(this).trigger("click");
+					});	
+				}
 			} else {
 				alert("사진을 업로드 해주세요!");
 			}
@@ -162,13 +216,15 @@
 			</div>
 		</div>
 	
-		<c:url var="post_url" value="/board/createBoardItem.do" />
+		<c:url var="post_url" value="/board/updateBoardItem.do" />
 		<form class="form-horizontal" id="fileupload" action="${post_url }" method="POST" enctype="multipart/form-data" role="form">
 			<input type="hidden" name="boardId" id="boardId" value="${boardItem.boardId }"/>
+			<input type="hidden" name="itemId" id="itemId" value="${boardItem.itemId }"/>
+			<input type="hidden" name="pageIndex" id="pageIndex" value="${pageIndex }"/>
 			<div class="form-group">
 				<label for="title" class="col-sm-2 control-label">Title</label>
 				<div class="col-sm-10">
-					<input type="text" class="form-control" id="title" name="title" placeholder="Title" />
+					<input type="text" class="form-control" id="title" name="title" placeholder="Title" value="${boardItem.title }"/>
 				</div>
 			</div>
 			<div class="form-group">
@@ -186,19 +242,20 @@
 			<div class="form-group">
 				<label for="date" class="col-sm-2 control-label">Date</label>
 				<div class="col-sm-10">
-					<input type="text" class="form-control" id="date" name="date" placeholder="2014년 10월 7일 7:00pm" />
+					<input type="text" class="form-control" id="date" name="date" placeholder="2014년 10월 7일 7:00pm" value="${boardItem.date }"/>
 				</div>
 			</div>
 			<div class="form-group">
 				<label for="coordinate" class="col-sm-2 control-label">Coordinate</label>
 				<div class="col-sm-10">
-					<input type="text" class="form-control" id="coordinate" name="coordinate" placeholder="37.543710,126.951887" />
+					<input type="text" class="form-control" id="coordinate" name="coordinate" placeholder="37.543710,126.951887" value="${boardItem.coordinate }"/>
 				</div>
 			</div>
 			<div class="form-group">
 				<label for="editor1" class="col-sm-2 control-label">Content</label>
 				<div class="col-sm-10">
 					<textarea class="form-control" name="contents" id="editor1" rows="10" cols="80">
+					${boardItem.contents }
 					</textarea>
 				</div>
 			</div>
@@ -211,7 +268,7 @@
 			                <span class="btn btn-success fileinput-button">
 			                    <i class="glyphicon glyphicon-plus"></i>
 			                    <span>Add files...</span>
-			                    <input type="file" name="files[]" multiple>
+			                    <input type="file" name="files[]">
 			                </span>
 			                <!-- The global file processing state -->
 			                <span class="fileupload-process"></span>
@@ -285,7 +342,7 @@
         <td>
             <span class="preview">
                 {% if (file.thumbnailUrl) { %}
-                    <a href="{%=file.url%}" title="{%=file.name%}" download="{%=file.name%}" data-gallery><img src="{%=file.thumbnailUrl%}"></a>
+                    <a href="{%=file.url%}" title="{%=file.name%}" download="{%=file.name%}" data-gallery><img src="{%=file.thumbnailUrl%}" style="max-height: 100px; max-width: 100px;"></a>
                 {% } %}
             </span>
         </td>
@@ -306,11 +363,10 @@
         </td>
         <td>
             {% if (file.deleteUrl) { %}
-                <button class="btn btn-danger delete" data-type="{%=file.deleteType%}" data-url="{%=file.deleteUrl%}"{% if (file.deleteWithCredentials) { %} data-xhr-fields='{"withCredentials":true}'{% } %}>
+                <button class="btn btn-danger delete" delete" var="{%=file.deleteUrl%}">
                     <i class="glyphicon glyphicon-trash"></i>
                     <span>Delete</span>
                 </button>
-                <input type="checkbox" name="delete" value="1" class="toggle">
             {% } else { %}
                 <button class="btn btn-warning cancel">
                     <i class="glyphicon glyphicon-ban-circle"></i>

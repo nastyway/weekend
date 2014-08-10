@@ -28,6 +28,12 @@
     <definition name="board/retrieveBoardItemDetail" extends="baseLayout">
         <put-attribute name="content" value="/WEB-INF/views/board/retrieveBoardItemDetail.jsp" />
     </definition>
+    <definition name="board/retrieveBoardItemDetailForRest" extends="baseLayout">
+    	<put-attribute name="header" value="" />
+        <put-attribute name="navbar" value="" />
+        <put-attribute name="footer" value="" />
+        <put-attribute name="content" value="/WEB-INF/views/board/retrieveBoardItemDetailForRest.jsp" />
+    </definition>
     
     <definition name="board/createBoardItemForm" extends="baseLayout">
         <put-attribute name="content" value="/WEB-INF/views/board/createBoardItemForm.jsp" />

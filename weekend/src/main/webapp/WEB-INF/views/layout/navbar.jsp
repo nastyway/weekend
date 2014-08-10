@@ -27,7 +27,8 @@
 							<li><a href="<c:url value='/board/retrieveBoardItemList.do?boardId=1&pageIndex=1'/>">News Board</a></li>
 							<li><a href="<c:url value='/board/retrieveBoardItemList.do?boardId=3&pageIndex=1'/>">Workshop Board</a></li>
 							<li><a href="<c:url value='/board/retrieveBoardItemList.do?boardId=4&pageIndex=1'/>">Interview Board</a></li>
-							<!-- <li class="divider"></li> -->
+							<li class="divider"></li>
+							<li><a href="<c:url value='/board/retrieveBoardItemList.do?boardId=5&pageIndex=1'/>">Header Board</a></li>
 						</ul>
 					</li>
 				</ul>
