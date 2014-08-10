@@ -17,6 +17,8 @@
 		<result property="registerId"	column="register_id"/>
 		<result property="registerName" column="register_name"/>
 		<result property="registerDate" column="register_date"/>
+		<result property="date" 		column="date"/>
+		<result property="coordinate"   column="coordinate"/>
 	</resultMap>
 	
 	<resultMap type="BoardItemObject" id="BoardItemResult">
@@ -31,6 +33,8 @@
 		<result property="registerId"	column="register_id"/>
 		<result property="registerName" column="register_name"/>
 		<result property="registerDate" column="register_date"/>
+		<result property="date" 		column="date"/>
+		<result property="coordinate"   column="coordinate"/>
 	</resultMap>
 	<resultMap type="FileMappingObject" id="FileMappingResult">
 		<result property="itemId" 		column="item_id"/>
@@ -49,7 +53,9 @@
 				DATE_FORMAT(W.END_DATE, "%Y-%m-%e") AS END_DATE, 
 				W.REGISTER_ID,
 				W.REGISTER_NAME,
-				DATE_FORMAT(W.REGISTER_DATE, "%Y-%m-%e") AS REGISTER_DATE
+				DATE_FORMAT(W.REGISTER_DATE, "%Y-%m-%e") AS REGISTER_DATE,
+				DATE,
+				COORDINATE
 		FROM 	(
 				SELECT		@ROW := @ROW + 1 AS ROW,
 							O.*
@@ -63,7 +69,9 @@
 										END_DATE, 
 										REGISTER_ID,
 										REGISTER_NAME,
-										REGISTER_DATE
+										REGISTER_DATE,
+										DATE,
+										COORDINATE
 							FROM  		WEEKEND_BD_BOARD_ITEM
 							]]>
 							<if test='boardIdList==null'>
@@ -104,7 +112,9 @@
 				DATE_FORMAT(END_DATE, "%Y-%m-%e") AS END_DATE, 
 				REGISTER_ID,
 				REGISTER_NAME,
-				DATE_FORMAT(REGISTER_DATE,"%Y-%m-%e") AS REGISTER_DATE
+				DATE_FORMAT(REGISTER_DATE,"%Y-%m-%e") AS REGISTER_DATE,
+				DATE,
+				COORDINATE
 		FROM WEEKEND_BD_BOARD_ITEM
 		WHERE BOARD_ID = #{boardId}
 		AND   ITEM_ID = #{itemId}
@@ -112,8 +122,8 @@
 	
 	<insert id="createBoardItem" parameterType="Map">
 		INSERT INTO WEEKEND_BD_BOARD_ITEM
-		(ITEM_ID, BOARD_ID, TITLE, HIT_COUNT, CONTENTS, START_DATE, END_DATE, REGISTER_ID, REGISTER_NAME, REGISTER_DATE) 
-		VALUES (#{itemId},#{boardId},#{title},1,#{contents},#{startDate},#{endDate},#{registerId},#{registerName},NOW());
+		(ITEM_ID, BOARD_ID, TITLE, HIT_COUNT, CONTENTS, START_DATE, END_DATE, REGISTER_ID, REGISTER_NAME, REGISTER_DATE, DATE, COORDINATE) 
+		VALUES (#{itemId},#{boardId},#{title},1,#{contents},#{startDate},#{endDate},#{registerId},#{registerName},NOW(), #{date, jdbcType=VARCHAR}, #{coordinate, jdbcType=VARCHAR});
 	</insert>
 	
 	<select id="getMappedFileInfo" parameterType="String" resultMap="FileMappingResult">
@@ -141,7 +151,8 @@
 				REGISTER_ID,
 				REGISTER_NAME,
 				DATE(REGISTER_DATE) AS REGISTER_DATE,
-				DATE
+				DATE,
+				COORDINATE
 		FROM (
 				SELECT 
 					ITEM_ID, 
@@ -154,7 +165,8 @@
 					REGISTER_ID,
 					REGISTER_NAME,
 					TIMESTAMP(REGISTER_DATE) AS REGISTER_DATE,
-					DATE
+					DATE,
+					COORDINATE
 				FROM  WEEKEND_BD_BOARD_ITEM
 				WHERE 1=1
 				]]> 
@@ -176,10 +188,22 @@
 	
 	<update id="updateBoardItem" parameterType="Map">
 		UPDATE	WEEKEND_BD_BOARD_ITEM
-		SET		TITLE = #{title},
-				CONTENTS = #{contents},
-				START_DATE = #{startDate},
-				END_DATE = #{endDate}
+		SET		TITLE = #{title}
+				<if test="contents!=null">
+				,CONTENTS = #{contents}
+				</if>
+				<if test="startDate!=null">
+				,START_DATE = #{startDate}
+				</if>
+				<if test="endDate!=null">
+				,END_DATE = #{endDate}
+				</if>
+				<if test="date!=null">
+				,DATE = #{date}
+				</if>
+				<if test="coordinate!=null">
+				,COORDINATE = #{coordinate}
+				</if>
 		WHERE	ITEM_ID = #{itemId}
 	</update>
 </mapper>

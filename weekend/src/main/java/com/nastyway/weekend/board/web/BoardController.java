@@ -51,7 +51,7 @@ public class BoardController {
 	private static final Logger logger = LoggerFactory.getLogger(BoardController.class);
 	
 	/**
-	 * °Ô½Ã±Û ¸ñ·Ï Á¶È¸
+	 * ï¿½Ô½Ã±ï¿½ ï¿½ï¿½ï¿½ ï¿½ï¿½È¸
 	 * 
 	 * @return ModelAndView
 	 */
@@ -63,7 +63,9 @@ public class BoardController {
 		
 		Board board = boardService.getBoard(boardId);
 		
-		//¾ø´Â °Ô½ÃÆÇÀÌ¸é ¿¡·¯ ¤»
+		System.out.println("board Id : ----------------------"+boardId);
+		
+		//ï¿½ï¿½ï¿½ ï¿½Ô½ï¿½ï¿½ï¿½ï¿½Ì¸ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½
 		if(board==null) {
 			mav.setView(new RedirectView("/weekend/base/common/error.jsp"));
 		} else {
@@ -79,7 +81,7 @@ public class BoardController {
 	}
 	
 	/**
-	 * °Ô½Ã±Û »ó¼¼ Á¶È¸ 
+	 * ï¿½Ô½Ã±ï¿½ ï¿½ï¿½ ï¿½ï¿½È¸ 
 	 * 
 	 * @return ModelAndView
 	 */
@@ -117,7 +119,7 @@ public class BoardController {
 	}
 	
 	/**
-	 * °Ô½Ã±Û µî·Ï È­¸é 
+	 * ï¿½Ô½Ã±ï¿½ ï¿½ï¿½ï¿½ È­ï¿½ï¿½ 
 	 * 
 	 * @return ModelAndView
 	 */
@@ -139,7 +141,7 @@ public class BoardController {
 	}
 	
 	/**
-	 * °Ô½Ã±Û µî·Ï
+	 * ï¿½Ô½Ã±ï¿½ ï¿½ï¿½ï¿½
 	 * 
 	 * @return ModelAndView
 	 */
@@ -149,7 +151,7 @@ public class BoardController {
 		Map<String, String> params = new HashMap<String,String>();
 		List<String> fileIdList = new ArrayList<String>();
 		
-		//³Ñ¾î¿Â FILE IDµé°ú INPUT °ªµéÀ» ´ã°í,
+		//ï¿½Ñ¾ï¿½ï¿½ FILE IDï¿½ï¿½ï¿½ INPUT ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½,
 		Enumeration<String> paramNames = request.getParameterNames();
 		while(paramNames.hasMoreElements()) {
 			String paramName = paramNames.nextElement();
@@ -165,29 +167,29 @@ public class BoardController {
 			logger.debug("paramName : "+paramName+", value : "+ request.getParameter(paramName));
 		}
 		
-		//ÀÛ¼ºÀÚ¸¦ µî·ÏÇÑ´Ù.
+		//ï¿½Û¼ï¿½ï¿½Ú¸ï¿½ ï¿½ï¿½ï¿½ï¿½Ñ´ï¿½.
 		HttpSession session = request.getSession();
 		User user = (User) session.getAttribute("userInfo");
 		params.put("registerId",user.getUserId());
 		params.put("registerName",user.getUserName());
 		
-		//item id¸¦ µî·ÏÇÑ´Ù.
+		//item idï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½Ñ´ï¿½.
 		String itemId = UUID.randomUUID().toString().replaceAll("-", "");
 		params.put("itemId",itemId);
 		
 		boardItemService.createBoardItem(params, fileIdList);
 		
-		return "redirect:/board/retrieveBoardItemDetail.do?boardId="+params.get("boardId")+"&itemId="+params.get("itemId");
+		return "redirect:/board/retrieveBoardItemDetail.do?boardId="+params.get("boardId")+"&itemId="+params.get("itemId")+"&pageIndex=1";
 		
 	}
 	
 	/**
-	 * °Ô½Ã±Û ¼öÁ¤ È­¸é 
+	 * ï¿½Ô½Ã±ï¿½ ï¿½ï¿½ï¿½ï¿½ È­ï¿½ï¿½ 
 	 * 
 	 * @return ModelAndView
 	 */
 	@RequestMapping(value = "/updateBoardItemForm.do")
-	public ModelAndView updateBoardItemForm(@RequestParam("boardId") String boardId, @RequestParam("itemId") String itemId) throws Exception {
+	public ModelAndView updateBoardItemForm(@RequestParam("boardId") String boardId, @RequestParam("itemId") String itemId, @RequestParam("pageIndex") String pageIndex) throws Exception {
 		
 		BoardItem param = new BoardItem();
 		param.setBoardId(boardId);
@@ -198,6 +200,7 @@ public class BoardController {
 		ModelAndView mav = new ModelAndView();
 		
 		mav.addObject("boardItem",boardItem);
+		mav.addObject("pageIndex",pageIndex);
 		mav.setViewName("board/updateBoardItemForm");
 		
 		return mav;
@@ -205,7 +208,7 @@ public class BoardController {
 	}
 	
 	/**
-	 * °Ô½Ã±Û ¼öÁ¤
+	 * ï¿½Ô½Ã±ï¿½ ï¿½ï¿½ï¿½ï¿½
 	 * 
 	 * @return ModelAndView
 	 */
@@ -215,7 +218,7 @@ public class BoardController {
 		Map<String, String> params = new HashMap<String,String>();
 		List<String> fileIdList = new ArrayList<String>();
 		
-		//³Ñ¾î¿Â FILE IDµé°ú INPUT °ªµéÀ» ´ã°í,
+		//ï¿½Ñ¾ï¿½ï¿½ FILE IDï¿½ï¿½ï¿½ INPUT ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½,
 		Enumeration<String> paramNames = request.getParameterNames();
 		while(paramNames.hasMoreElements()) {
 			String paramName = paramNames.nextElement();
@@ -231,7 +234,7 @@ public class BoardController {
 			logger.debug("paramName : "+paramName+", value : "+ request.getParameter(paramName));
 		}
 		
-		//ÀÛ¼ºÀÚ¸¦ µî·ÏÇÑ´Ù.
+		//ï¿½Û¼ï¿½ï¿½Ú¸ï¿½ ï¿½ï¿½ï¿½ï¿½Ñ´ï¿½.
 //		HttpSession session = request.getSession();
 //		User user = (User) session.getAttribute("userInfo");
 //		params.put("updateId",user.getUserId());
@@ -239,17 +242,17 @@ public class BoardController {
 		
 		boardItemService.updateBoardItem(params, fileIdList);
 		
-		return "redirect:/board/retrieveBoardItemDetail.do?boardId="+params.get("boardId")+"&itemId="+params.get("itemId");
+		return "redirect:/board/retrieveBoardItemDetail.do?boardId="+params.get("boardId")+"&itemId="+params.get("itemId")+"&pageIndex="+params.get("pageIndex");
 		
 	}
 	
 	/**
-	 * °Ô½Ã±Û »èÁ¦
+	 * ï¿½Ô½Ã±ï¿½ ï¿½ï¿½ï¿½ï¿½
 	 * 
 	 * @return ModelAndView
 	 */
 	@RequestMapping(value = "/deleteBoardItem.do")
-	public String deleteBoardItem(@RequestParam("boardId") String boardId, @RequestParam("itemId") String itemId) {
+	public String deleteBoardItem(@RequestParam("boardId") String boardId, @RequestParam("itemId") String itemId, @RequestParam("pageIndex") String pageIndex) {
 		
 		logger.info("---------------------------deleteBoardItem.do---------------------------");
 
@@ -262,15 +265,33 @@ public class BoardController {
 			int result = boardItemService.deleteBoardItem(boardItem);
 
 			if(result>0) {
-				redirectUrl = "redirect:/board/retrieveBoardItemList.do?boardId="+boardId+"&pageIndex=1";
+				redirectUrl = "redirect:/board/retrieveBoardItemList.do?boardId="+boardId+"&pageIndex="+pageIndex;
 			} else {
-				redirectUrl = "redirect:/board/retrieveBoardItemList.do?boardId="+boardId+"&pageIndex=1";
+				redirectUrl = "redirect:/board/retrieveBoardItemList.do?boardId="+boardId+"&pageIndex="+pageIndex;
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 		
 		return redirectUrl;
+		
+	}
+	
+	@RequestMapping(value = "/retrieveBoardItemDetailForRest.do")
+	public ModelAndView retrieveBoardItemDetailForRest(@RequestParam("boardId") String boardId, @RequestParam("itemId") String itemId) throws Exception {
+		
+		ModelAndView mav = new ModelAndView();
+		
+		BoardItem param = new BoardItem();
+		param.setBoardId(boardId);
+		param.setItemId(itemId);
+		
+		BoardItem result = boardItemService.getBoardItem(param);
+		
+		mav.addObject("boardItem", result);
+		mav.setViewName("board/retrieveBoardItemDetailForRest");
+		
+		return mav;
 		
 	}
 }

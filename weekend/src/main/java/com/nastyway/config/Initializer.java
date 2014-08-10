@@ -29,6 +29,8 @@ public class Initializer implements WebApplicationInitializer
         this.addDispatcherServlet(servletContext);
         this.addUtf8CharacterEncodingFilter(servletContext);
         
+        this.addHttpRequestWrapperFilter(servletContext);
+        
         LoggerContext context = (LoggerContext) LoggerFactory.getILoggerFactory();
         
         try {
@@ -67,6 +69,18 @@ public class Initializer implements WebApplicationInitializer
     private void addUtf8CharacterEncodingFilter(ServletContext servletContext)
     {
         FilterRegistration.Dynamic filter = servletContext.addFilter("CHARACTER_ENCODING_FILTER", CharacterEncodingFilter.class);
+        filter.setInitParameter("encoding", "UTF-8");
+        filter.setInitParameter("forceEncoding", "true");
+        filter.addMappingForUrlPatterns(null, false, "/*");
+    }
+    
+    /**
+     * UTF-8 캐릭터 인코딩 필터를 추가한다.
+     * @param servletContext
+     */
+    private void addHttpRequestWrapperFilter(ServletContext servletContext)
+    {
+        FilterRegistration.Dynamic filter = servletContext.addFilter("HttpRequestWrapperFilter", HttpRequestWrapperFilter.class);
         filter.setInitParameter("encoding", "UTF-8");
         filter.setInitParameter("forceEncoding", "true");
         filter.addMappingForUrlPatterns(null, false, "/*");

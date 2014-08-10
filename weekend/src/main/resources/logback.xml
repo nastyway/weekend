@@ -13,7 +13,7 @@
 		<File>c:/Weekend-Project/logs/weekend.log</File>
 		<rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
 			<!-- daily rollover -->
-			<FileNamePattern>weekend.%d{yyyy-MM-dd}.log</FileNamePattern>
+			<FileNamePattern>c:/Weekend-Project/logs/weekend.%d{yyyy-MM-dd}.log</FileNamePattern>
 			<!-- keep 30 days' worth of history -->
 			<maxHistory>30</maxHistory>
 		</rollingPolicy>

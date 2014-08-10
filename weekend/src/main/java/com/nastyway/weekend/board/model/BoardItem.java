@@ -25,6 +25,9 @@ public class BoardItem {
 	private String fileId = "";
 	private List<FileMapping> attachFiles;
 	
+	private String date = "";
+	private String coordinate = "";
+	
 	private String searchWord = "";
 	private int startIndex = 0;
 	private int endIndex = 0;
@@ -142,6 +145,18 @@ public class BoardItem {
 	}
 	public void setUploadedThumbnailUrl(List<String> uploadedThumbnailUrl) {
 		this.uploadedThumbnailUrl = uploadedThumbnailUrl;
+	}
+	public String getDate() {
+		return date;
+	}
+	public void setDate(String date) {
+		this.date = date;
+	}
+	public String getCoordinate() {
+		return coordinate;
+	}
+	public void setCoordinate(String coordinate) {
+		this.coordinate = coordinate;
 	}
 	
 
